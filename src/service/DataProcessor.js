@@ -31,9 +31,6 @@ export class DataProcessor {
                 const currentTime = timesArr[index];
                 return (currentDate >= startDate && currentDate <= endDate) && (currentTime >= hourFrom && currentTime <= hourTo);
             });
-
-            const filteredTemperature = filteredData.map((datetime, index) => temperatureArr[getDateAndTimeArr.indexOf(datetime)]);
-            console.log(filteredTemperature)
             const filteredTemperatureData = filteredData.map((datetime, index) => {
                 return {
                     date: datesArr[getDateAndTimeArr.indexOf(datetime)],

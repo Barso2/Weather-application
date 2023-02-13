@@ -20,7 +20,7 @@ export class DataProcessor {
             const timesArr = []
             const datesArr = []
             for (let dateTimeString of getDateAndTimeArr) {
-                const time = dateTimeString.split("T")[1];
+                const time = dateTimeString.split("T")[1].split(":")[0];
                 const date = dateTimeString.split("T")[0];
                 timesArr.push(time);
                 datesArr.push(date);

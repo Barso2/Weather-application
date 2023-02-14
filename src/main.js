@@ -1,9 +1,7 @@
 import { DataProcessor } from "./service/DataProcessor.js";
 import { weatherConfig } from "./config/weather-config.js";
 
-const url = weatherConfig.url;
-const citiesObj = weatherConfig.cities;
-const dataProcessor = new DataProcessor(url, citiesObj);
+const dataProcessor = new DataProcessor(weatherConfig.url, weatherConfig.cities);
 dataProcessor.getTemperatureData("Rehovot","2023-02-15","2023-02-16","00:00","03:00");
 
 // async function getTemperatureData() {

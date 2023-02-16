@@ -1,51 +1,45 @@
 export class DataProcessor {
-    #url
-    #cities
+    #url;
+    #cities;
     constructor(url, cities) {
-        this.#cities = cities;
         this.#url = url;
+        this.#cities = cities;
     }
-    async getData(latitude, longitude) {
+    async #getData(actualUrl) {
         const responseFromServer =
-            await fetch(`${this.#url}&latitude=${latitude}&longitude=${longitude}`);
+            await fetch(actualUrl);
         return responseFromServer.json();
-    }
 
+
+    }
     async getTemperatureData(city, startDate, endDate, hourFrom, hourTo) {
-        if (city in this.#cities) {
-            let res = this.getCoordinatesByCity(city)
-            const getDataByCoordinate = await this.getData(res[0], res[1]);
-            const getDateAndTimeArr = getDataByCoordinate.hourly.time;
-            const temperatureArr = getDataByCoordinate.hourly.temperature_2m;
-            const timesArr = []
-            const datesArr = []
-            for (let dateTimeString of getDateAndTimeArr) {
-                const time = dateTimeString.split("T")[1].split(":")[0];
-                const date = dateTimeString.split("T")[0];
-                timesArr.push(time);
-                datesArr.push(date);
-            }
-
-            const filteredData = getDateAndTimeArr.filter((datetime, index) => {
-                const currentDate = datesArr[index];
-                const currentTime = timesArr[index];
-                return (currentDate >= startDate && currentDate <= endDate) && (currentTime >= hourFrom && currentTime <= hourTo);
-            });
-            const filteredTemperatureData = filteredData.map((datetime, index) => {
-                return {
-                    date: datesArr[getDateAndTimeArr.indexOf(datetime)],
-                    hour: timesArr[getDateAndTimeArr.indexOf(datetime)],
-                    temperature: temperatureArr[index]
-                }
-            });
-
-            console.log(filteredTemperatureData);
-        }
+        const latLong = this.#cities[city];
+        const actualUrl = this.#getActualUrl(latLong.latitude, latLong.longitude,
+            startDate, endDate);
+        const rawData = await this.#getData(actualUrl);
+        return processRawData(rawData, hourFrom, hourTo);
     }
-    getCoordinatesByCity(city) {
-        const coords = this.#cities[city];
-        const latitude = coords.latitude;
-        const longitude = coords.longitude;
-        return [latitude, longitude];
+    #getActualUrl(latitude, longitude, startDate, endDate) {
+        return `${this.#url}&latitude=${latitude}&longitude=${longitude}&start_date=${startDate}&end_date=${endDate}`
     }
+}
+function processRawData(rawData, hourFrom, hourTo) {
+    
+    const timeArray = getHoursElements(rawData.hourly.time, hourFrom, hourTo);
+    const temperatureArray =getHoursElements(rawData.hourly.temperature_2m, hourFrom, hourTo); ;
+    return timeArray.map((t, index) => {
+        const res = {};
+        const dateTime = t.split("T");
+        res.date = dateTime[0];
+        res.hour = dateTime[1];
+        res.temperature = temperatureArray[index];
+        return res;
+
+    })
+}
+function getHoursElements (array, hourFrom, hourTo) {
+    return array.filter((__, index) => {
+        const hour = index % 24;
+        return hour >= hourFrom && hour <= hourTo
+    } )
 }

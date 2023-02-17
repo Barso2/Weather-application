@@ -1,3 +1,15 @@
+// import { weatherConfig } from "./config/weather-config.js";
+// import { DataProcessor } from "./service/DataProcessor.js";
+// import { DataForm } from "./ui/data-form.js";
+// const dataProcessor = new DataProcessor(weatherConfig.url, weatherConfig.cities);
+// const schema = [
+//     {columnName: 'Date', fieldName: 'date'},
+//     {columnName: 'Hour', fieldName: 'hour'},
+//     {columnName: "Temperature", fieldName: 'temperature'},
+// ]
+// const dataForm = new DataForm("form-section", weatherConfig.maxDays);
+// const temperatureTable = new Table("table-section", "Weather-forecast", schema);
+
 import { weatherConfig } from "./config/weather-config.js";
 import { DataProcessor } from "./service/DataProcessor.js";
 import { DataForm } from "./ui/data-form.js";

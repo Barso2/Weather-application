@@ -39,8 +39,8 @@ export class DataForm {
 
     setHourOptions(hours, str) {
         let res = `<select id="${HOUR_TO_ID}">
-        <option value="" disabled selected>${str}</option>
-    </select>`;
+                        <option value="" disabled selected>${str}</option>
+                   </select>`;
         for (let i = 0; i < 24; i++) {
             res += (`<option value="${i}">${i + ":00"}</option>`)
             console.log(res)
